@@ -1,8 +1,29 @@
 package main
 
-import "fmt"
+import (
+	"flag"
+	"fmt"
+
+	"github.com/AyanokojiKiyotaka8/hotel-reservation/api"
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
-	fmt.Println("eee")
-	fmt.Println("let's goooo")
+	listenAddress := flag.String("listenAddress", ":3000", "The listen address of API server")
+	flag.Parse()
+
+	app := fiber.New()
+	apiv1 := app.Group("/api/v1")
+
+	apiv1.Get("/user", api.HandleGetUsers)
+	apiv1.Get("/user/:id", api.HandleGetUser)
+
+	app.Get("/foo", handleFoo)
+
+	fmt.Println("Starting at port:3000")
+	app.Listen(*listenAddress)
+}
+
+func handleFoo(c *fiber.Ctx) error {
+	return c.JSON(map[string]string{"msg": "fine"})
 }
