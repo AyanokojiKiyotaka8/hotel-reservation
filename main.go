@@ -17,6 +17,7 @@ var config  = fiber.Config{
 		return c.JSON(map[string]string{"error": err.Error()})
 	},
 }
+
 func main() {
 	listenAddress := flag.String("listenAddress", ":3000", "The listen address of API server")
 	flag.Parse()
@@ -31,6 +32,7 @@ func main() {
 	app := fiber.New(config)
 	apiv1 := app.Group("/api/v1")
 
+	apiv1.Post("/user", userHandler.HandlePostUser)
 	apiv1.Get("/user", userHandler.HandleGetUsers)
 	apiv1.Get("/user/:id", userHandler.HandleGetUser)
 	app.Listen(*listenAddress)
