@@ -18,6 +18,8 @@ var config  = fiber.Config{
 	},
 }
 
+var dbname = "hotel-reservation"
+
 func main() {
 	listenAddress := flag.String("listenAddress", ":3000", "The listen address of API server")
 	flag.Parse()
@@ -27,7 +29,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	userHandler := api.NewUserHandler(db.NewMongoUserStore(client))
+	userHandler := api.NewUserHandler(db.NewMongoUserStore(client, dbname))
 
 	app := fiber.New(config)
 	apiv1 := app.Group("/api/v1")
