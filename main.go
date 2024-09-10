@@ -18,18 +18,16 @@ var config  = fiber.Config{
 	},
 }
 
-var dbname = "hotel-reservation"
-
 func main() {
 	listenAddress := flag.String("listenAddress", ":3000", "The listen address of API server")
 	flag.Parse()
 
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017"))
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(db.DBURI))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	userHandler := api.NewUserHandler(db.NewMongoUserStore(client, dbname))
+	userHandler := api.NewUserHandler(db.NewMongoUserStore(client, db.DBNAME))
 
 	app := fiber.New(config)
 	apiv1 := app.Group("/api/v1")

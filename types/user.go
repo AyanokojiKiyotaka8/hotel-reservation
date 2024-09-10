@@ -16,8 +16,8 @@ const(
 )
 
 type UpdateUserParams struct {
-	FirstName string `json:"firstName"`
-	LastName string `json:"lastName"`
+	FirstName 	string 	`json:"firstName"`
+	LastName 	string	`json:"lastName"`
 }
 
 func (p UpdateUserParams) ToJSON() bson.M{
@@ -32,10 +32,10 @@ func (p UpdateUserParams) ToJSON() bson.M{
 }
 
 type CreateUserParams struct {
-	FirstName string `json:"firstName"`
-	LastName string `json:"lastName"`
-	Email string `json:"email"`
-	Password string `json:"password"`
+	FirstName 	string 	`json:"firstName"`
+	LastName 	string 	`json:"lastName"`
+	Email 		string 	`json:"email"`
+	Password 	string 	`json:"password"`
 }
 
 func (p CreateUserParams) Validate() map[string]string {
@@ -61,11 +61,11 @@ func isValidEmail(email string) bool {
 }
 
 type User struct {
-	ID primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	FirstName string `bson:"firstName" json:"firstName"`
-	LastName string `bson:"lastName" json:"lastName"`
-	Email string `bson:"email" json:"email"`
-	EncryptedPassword string `bson:"EncryptedPassword" json:"-"`
+	ID 					primitive.ObjectID 	`bson:"_id,omitempty" json:"id,omitempty"`
+	FirstName 			string 				`bson:"firstName" json:"firstName"`
+	LastName 			string 				`bson:"lastName" json:"lastName"`
+	Email 				string 				`bson:"email" json:"email"`
+	EncryptedPassword 	string 				`bson:"EncryptedPassword" json:"-"`
 }
 
 func NewUserFromParams(params CreateUserParams) (*User, error) {

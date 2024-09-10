@@ -10,9 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-const DBNAME = "hotel-reservation"
-const userColl = "users"
-
 type Dropper interface {
 	Drop(context.Context) error
 }
@@ -35,7 +32,7 @@ type MongoUserStore struct {
 func NewMongoUserStore(client *mongo.Client, dbname string) *MongoUserStore {
 	return &MongoUserStore{
 		client: client,
-		coll: client.Database(dbname).Collection(userColl),
+		coll: client.Database(dbname).Collection("users"),
 	}
 }
 
@@ -47,10 +44,7 @@ func (s *MongoUserStore) Drop(ctx context.Context) error {
 func (s *MongoUserStore) UpdateUser(ctx context.Context, filter bson.M, values types.UpdateUserParams) error {
 	update := bson.M{"$set": values.ToJSON()}
 	_, err := s.coll.UpdateOne(ctx, filter, update)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (s *MongoUserStore) DeleteUser(ctx context.Context, id string) error {
@@ -60,10 +54,7 @@ func (s *MongoUserStore) DeleteUser(ctx context.Context, id string) error {
 	}
 
 	_, err = s.coll.DeleteOne(ctx, bson.M{"_id": oid})
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (s *MongoUserStore) InsertUser(ctx context.Context, user *types.User) (*types.User, error) {
