@@ -29,16 +29,19 @@ func seedHotel(name string, location string, rating int) {
 
 	rooms := []types.Room{
 		{
-			Type: types.SingleRoomType,
-			BasePrice: 99.9,
+			Size: "small",
+			Price: 99.9,
+			Seaside: true,
 		},
 		{
-			Type: types.DeluxeRoomType,
-			BasePrice: 199.9,
+			Size: "kingsize",
+			Price: 199.9,
+			Seaside: true,
 		},
 		{
-			Type: types.SeaSideRoomType,
-			BasePrice: 122.9,
+			Size: "normal",
+			Price: 122.9,
+			Seaside: false,
 		},
 	}
 
@@ -70,7 +73,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	if err = client.Database(db.DBNAME).Drop(ctx); err != nil {
+	if err := client.Database(db.DBNAME).Drop(ctx); err != nil {
 		log.Fatal(err)
 	}
 

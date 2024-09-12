@@ -71,6 +71,7 @@ func (s *MongoUserStore) GetUsers(ctx context.Context) ([]*types.User, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var users []*types.User
 	if err := res.All(ctx, &users); err != nil {
 		return nil, err
@@ -85,7 +86,7 @@ func (s *MongoUserStore) GetUserByID(ctx context.Context, id string) (*types.Use
 	}
 
 	var user types.User
-	if err = s.coll.FindOne(ctx, bson.M{"_id": oid}).Decode(&user); err != nil {
+	if err := s.coll.FindOne(ctx, bson.M{"_id": oid}).Decode(&user); err != nil {
 		return nil, err
 	}
 	return &user, nil

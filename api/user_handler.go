@@ -22,17 +22,19 @@ func NewUserHandler(userStore db.UserStore) *UserHandler {
 }
 
 func (h *UserHandler) HandlePutUser(c *fiber.Ctx) error {
-	var values types.UpdateUserParams
 	id := c.Params("id")
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
 	}
+
+	var values types.UpdateUserParams
 	if err := c.BodyParser(&values); err != nil {
 		return err
 	}
+
 	filter := bson.M{"_id": oid}
-	if err = h.userStore.UpdateUser(c.Context(), filter, values); err != nil {
+	if err := h.userStore.UpdateUser(c.Context(), filter, values); err != nil {
 		return err
 	}
 	return c.JSON(map[string]string{"updated": id})
@@ -54,10 +56,12 @@ func (h *UserHandler) HandlePostUser(c *fiber.Ctx) error {
 	if len(params.Validate()) > 0 {
 		return c.JSON(params.Validate())
 	}
+
 	user, err := types.NewUserFromParams(params)
 	if err != nil {
 		return err
 	}
+	
 	usr, err := h.userStore.InsertUser(c.Context(), user)
 	if err != nil {
 		return err
