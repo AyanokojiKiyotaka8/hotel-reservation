@@ -37,7 +37,7 @@ func NewMongoUserStore(client *mongo.Client, dbname string) *MongoUserStore {
 }
 
 func (s *MongoUserStore) Drop(ctx context.Context) error {
-	fmt.Println("---- dropping user collection ----")
+	fmt.Println("---- dropping the user collection ----")
 	return s.coll.Drop(ctx)
 }
 
