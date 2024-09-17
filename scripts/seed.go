@@ -27,6 +27,7 @@ func seedUser(firstName, lastName, email string) {
 		Email: email,
 		Password: "verystrongpassword",
 	})
+	
 	if err != nil {
 		log.Fatal(err)
 	}
