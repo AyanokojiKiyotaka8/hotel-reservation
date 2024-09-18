@@ -7,7 +7,7 @@ import (
 
 	"github.com/AyanokojiKiyotaka8/hotel-reservation/api"
 	"github.com/AyanokojiKiyotaka8/hotel-reservation/db"
-	"github.com/AyanokojiKiyotaka8/hotel-reservation/middleware"
+	"github.com/AyanokojiKiyotaka8/hotel-reservation/api/middleware"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -28,10 +28,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app := fiber.New(config)
-	auth := app.Group("/api")
-	apiv1 := app.Group("/api/v1", middleware.JWTAuthentication)
-
 	// storages
 	userStore := db.NewMongoUserStore(client, db.DBNAME)
 	hotelStore := db.NewMongoHotelStore(client, db.DBNAME)
@@ -42,12 +38,17 @@ func main() {
 		User: userStore,
 	}
 
+	app := fiber.New(config)
+	auth := app.Group("/api")
+	apiv1 := app.Group("/api/v1", middleware.JWTAuthentication(userStore))
+
 	// handlers
 	userHandler := api.NewUserHandler(userStore)
 	hotelHandler := api.NewHotelHandler(store)
 	authHandler := api.NewAuthHandler(userStore)
+	roomHandler := api.NewRoomHandler(store)
 
-	// auth
+	// auth api
 	auth.Post("/auth", authHandler.HandleAuthenticate)
 
 	// user api
@@ -61,6 +62,9 @@ func main() {
 	apiv1.Get("/hotel", hotelHandler.HandleGetHotels)
 	apiv1.Get("/hotel/:id", hotelHandler.HandleGetHotel)
 	apiv1.Get("/hotel/:id/rooms", hotelHandler.HandleGetRooms)
+
+	// room api
+	apiv1.Post("/room/:id/book", roomHandler.HandleBookRoom)
 
 	app.Listen(*listenAddress)
 }
